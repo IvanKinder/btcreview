@@ -1,0 +1,21 @@
+{
+  "name": "btc-fetcher",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon --watch src -e ts --exec node --loader ts-node/esm src/index.ts",
+    "start": "node dist/index.js",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@types/node-schedule": "^2.1.7",
+    "axios": "^1.6.0",
+    "node-schedule": "^2.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "nodemon": "^3.0.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
