@@ -20,18 +20,29 @@ services:
   fetcher:
     build: ./fetcher
     depends_on:
-      - nuxtapp
+      nuxtapp:
+        condition: service_healthy
 
   nuxtapp:
     build: ./nuxtapp
     ports:
       - "3000:3000"
+    volumes:
+      - ./nuxtapp:/app
+      - /app/node_modules
     environment:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/btc?schema=public
       NUXT_HOST: 0.0.0.0
       NUXT_PORT: 3000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    command: sh -c "npx prisma migrate dev --name init && npx prisma migrate deploy && npm run dev"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
 volumes:
   pgdata:

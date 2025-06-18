@@ -1,13 +1,14 @@
 import axios from 'axios';
 import { scheduleJob } from 'node-schedule';
+import { fetchHistoricalData } from './history.js';
 
-const API_URL = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd';
+const API_URL = 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT';
 const BACKEND_URL = 'http://nuxtapp:3000/api/prices'
 
-async function fetchBitcoinPrice() {
+const fetchBitcoinPrice = async () => {
     try {
-        const response = await axios.get(API_URL);
-        const price = response.data.bitcoin.usd;
+        const response = await axios.get(API_URL, { timeout: 3000 });
+        const price = parseFloat(response.data.price);
 
         await axios.post(BACKEND_URL, { price: price })
 
@@ -17,6 +18,10 @@ async function fetchBitcoinPrice() {
     }
 }
 
-scheduleJob({ rule: '*/10 * * * * *' }, fetchBitcoinPrice);
+fetchHistoricalData()
+    .then(() => console.log('🎉 Импорт завершен'))
+    .catch(() => process.exit(1));
+
+scheduleJob('1 * * * * *', fetchBitcoinPrice);
 
 console.log('Fetcher service started...');
