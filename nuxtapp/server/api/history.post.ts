@@ -1,9 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-
-interface Price {
-    price: number;
-    timestamp: string;
-}
+import type { Price } from '../types/types'
 
 const prisma = new PrismaClient()
 

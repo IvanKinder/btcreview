@@ -1,11 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
-
-type Timestamp = number;
-type Price = number;
-
-interface CoinGeckoMarketChart {
-    prices: [Timestamp, Price][];
-}
+import axios from 'axios';
 
 interface BitcoinPrice {
     price: number;
@@ -27,8 +20,8 @@ const fetchBinanceHistory = async (): Promise<BitcoinPrice[]> => {
         {
             params: {
                 symbol: 'BTCUSDT',
-                interval: '1m',
-                limit: 1000     // Макс. 1000 записей
+                interval: '1d',
+                limit: 1000
             },
             timeout: 3000
         }
@@ -46,7 +39,7 @@ export const fetchHistoricalData = async (): Promise<void> => {
         const { data } = await axios.post<ApiResponse>(
             BACKEND_URL,
             {
-                truncate: true, // если хотим очистить базу ( для удобства )
+                truncate: false, // если хотим очистить базу ( для удобства )
                 prices,
                 timeout: 10000,
             }
